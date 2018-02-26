@@ -1,15 +1,40 @@
-name: my-snap-name # you probably want to 'snapcraft register <name>'
-version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Single-line elevator pitch for your amazing snap # 79 char long summary
+name: bcompare
+version: 4.2.4.22795
+summary: bcompare is a powerful time-saving utility for comparing files & folders.
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+ bcompare is a powerful time-saving utility for comparing files and
+ folders.
+ Use it to manage source code, keep folders in sync, compare program output,
+ and validate copies of your data.  bcompare can create a snapshot of a
+ live directory structure, and compare it against the live copy at a later
+ date.
+ bcompare helps you analyze differences in detail and carefully reconcile
+ them.  It commands a wide range of file and text operations, as well as script
+ commands for automating tasks.
 
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: devel
+architectures: [amd64]
+confinement: devmode
 
 parts:
-  my-part:
-    # See 'snapcraft plugins'
-    plugin: nil
+  desktop-qt4:
+    source-tag: v20180201
+  bcompare:
+    after:
+      - desktop-qt4
+    plugin: dump
+    source: https://www.scootersoftware.com/bcompare-4.2.4.22795_amd64.deb
+    source-type: deb
+    prepare: |
+      sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' usr/share/applications/bcompare.desktop
+      sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' usr/bin/bcompare
+
+apps:
+  bcompare:
+    command: desktop-launch $SNAP/usr/bin/bcompare
+    desktop: usr/share/applications/bcompare.desktop
+    plugs:
+      - desktop
+      - home
+      - unity7
+      - network
