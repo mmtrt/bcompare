@@ -1,5 +1,6 @@
 name: bcompare
-version: 4.2.4.22795
+version: latest
+version-script: cat $SNAPCRAFT_STAGE/version
 summary: bcompare is a powerful time-saving utility for comparing files & folders.
 description: |
  bcompare is a powerful time-saving utility for comparing files and
@@ -29,6 +30,10 @@ parts:
     source-type: deb
     override-build: |
       snapcraftctl build
+      set -ex
+      ver="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $3}')"
+      bnum="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $5}')"
+      echo $ver.$bnum > $SNAPCRAFT_STAGE/version
       sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' $SNAPCRAFT_PART_INSTALL/usr/share/applications/bcompare.desktop
       sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' $SNAPCRAFT_PART_INSTALL/usr/bin/bcompare
 
