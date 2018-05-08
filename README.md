@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src=".png?raw=true" alt="Project">
+  <img src="https://avatars1.githubusercontent.com/u/29598503?v=3&s=256" alt="Project">
   <br />
   bcompare
 </h1>
