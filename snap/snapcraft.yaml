@@ -13,8 +13,10 @@ description: |
  commands for automating tasks.
 
 grade: devel
-architectures: [amd64]
 confinement: devmode
+architectures:
+  - build-on: amd64
+    run-on: [amd64]
 
 parts:
   desktop-qt4:
@@ -25,9 +27,10 @@ parts:
     plugin: dump
     source: https://www.scootersoftware.com/bcompare-4.2.4.22795_amd64.deb
     source-type: deb
-    prepare: |
-      sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' usr/share/applications/bcompare.desktop
-      sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' usr/bin/bcompare
+    override-build: |
+      snapcraftctl build
+      sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' $SNAPCRAFT_PART_INSTALL/usr/share/applications/bcompare.desktop
+      sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' $SNAPCRAFT_PART_INSTALL/usr/bin/bcompare
 
 apps:
   bcompare:
