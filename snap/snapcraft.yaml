@@ -13,8 +13,8 @@ description: |
  them.  It commands a wide range of file and text operations, as well as script
  commands for automating tasks.
 
-grade: devel
-confinement: devmode
+grade: stable
+confinement: strict
 architectures:
   - build-on: amd64
     run-on: [amd64]
