@@ -25,15 +25,15 @@ parts:
   bcompare:
     after:
       - desktop-qt4
-    plugin: dump
-    source: https://www.scootersoftware.com/bcompare-4.2.4.22795_amd64.deb
-    source-type: deb
+    plugin: nil
     override-build: |
       snapcraftctl build
       set -ex
       ver="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $3}')"
       bnum="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $5}')"
       echo $ver.$bnum > $SNAPCRAFT_STAGE/version
+      wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_amd64.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_amd64.deb .
+      cp -R -p usr $SNAPCRAFT_PART_INSTALL/
       sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' $SNAPCRAFT_PART_INSTALL/usr/share/applications/bcompare.desktop
       sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' $SNAPCRAFT_PART_INSTALL/usr/bin/bcompare
 
