@@ -34,6 +34,8 @@ parts:
       cp -R -p usr $SNAPCRAFT_PART_INSTALL/
       sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' $SNAPCRAFT_PART_INSTALL/usr/share/applications/bcompare.desktop
       sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' $SNAPCRAFT_PART_INSTALL/usr/bin/bcompare
+    build-packages:
+      - wget
 
 apps:
   bcompare:
