@@ -20,8 +20,6 @@ architectures:
     run-on: [amd64]
 
 parts:
-  desktop-qt4:
-    source-tag: v20180201
   bcompare:
     after:
       - desktop-qt4
