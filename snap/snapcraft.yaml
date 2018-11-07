@@ -17,7 +17,7 @@ grade: stable
 confinement: strict
 architectures:
   - build-on: amd64
-    run-on: [amd64]
+  - build-on: i386
 
 parts:
   bcompare:
@@ -30,7 +30,18 @@ parts:
       ver="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $3}')"
       bnum="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $5}')"
       echo $ver.$bnum > $SNAPCRAFT_STAGE/version
-      wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_amd64.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_amd64.deb .
+
+      # Check build ARCH
+      ARCHITECTURE=$(dpkg --print-architecture)
+      if [ "${ARCHITECTURE}" = "amd64" ]; then
+       wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_amd64.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_amd64.deb .
+      elif [ "${ARCHITECTURE}" = "i386" ]; then
+       wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_i386.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_i386.deb .
+      else
+       echo "ERROR! beyondcompare only produces software for amd64 and i386. Failing the build here."
+       exit 1
+      fi
+
       cp -R -p usr $SNAPCRAFT_PART_INSTALL/
       sed -i 's|Icon=bcompare|Icon=/usr/share/pixmaps/bcompare.png|' $SNAPCRAFT_PART_INSTALL/usr/share/applications/bcompare.desktop
       sed -i 's|BC_LIB=/usr/lib/beyondcompare|BC_LIB=$SNAP/usr/lib/beyondcompare|' $SNAPCRAFT_PART_INSTALL/usr/bin/bcompare
