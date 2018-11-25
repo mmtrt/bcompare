@@ -27,16 +27,15 @@ parts:
     override-build: |
       snapcraftctl build
       set -ex
-      ver="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $3}')"
-      bnum="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g" | awk '{print $5}')"
-      echo $ver.$bnum > $SNAPCRAFT_STAGE/version
+      ver="$(wget https://www.scootersoftware.com/download.php -q -S -O - 2>&1 | grep Version | sed "2,9d;s|,||g;s|build|.|;s| . |.|" | awk '{print $3}')"
+      echo $ver > $SNAPCRAFT_STAGE/version
 
       # Check build ARCH
       ARCHITECTURE=$(dpkg --print-architecture)
       if [ "${ARCHITECTURE}" = "amd64" ]; then
-       wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_amd64.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_amd64.deb .
+       wget https://www.scootersoftware.com/bcompare-${ver}_amd64.deb && dpkg-deb -xv bcompare-${ver}_amd64.deb .
       elif [ "${ARCHITECTURE}" = "i386" ]; then
-       wget https://www.scootersoftware.com/bcompare-${ver}.${bnum}_i386.deb && dpkg-deb -xv bcompare-${ver}.${bnum}_i386.deb .
+       wget https://www.scootersoftware.com/bcompare-${ver}_i386.deb && dpkg-deb -xv bcompare-${ver}_i386.deb .
       else
        echo "ERROR! beyondcompare only produces software for amd64 and i386. Failing the build here."
        exit 1
