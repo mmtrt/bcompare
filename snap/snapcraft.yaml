@@ -57,3 +57,4 @@ apps:
       - home
       - unity7
       - network
+      - removable-media
